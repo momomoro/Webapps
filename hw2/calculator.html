@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+<link rel="stylesheet" type="text/css" href="css/calculator.css">
+<meta charset="utf-8"/>
+<title> Calculator </title>
+<script src="js/calculator.js"></script>
+</head>
+<body>
+<input class ="calcDisplay" type="text" name="calcDisplay" id="calcDisplay" value="0" readonly><br>
+<table>
+	<tr>
+		<td><button class="digit" type="button" onclick="calculate('7')">7</button></td>
+		<td><button class="digit" type="button" onclick="calculate('8')">8</button></td>
+		<td><button class="digit" type="button" onclick="calculate('9')">9</button></td>
+		<td><button class="operator" type="button" onclick="calculate('+')">&plus;</button></td>
+	</tr>
+	<tr>
+		<td><button class="digit" type="button" onclick="calculate('4')">4</button></td>
+		<td><button class="digit" type="button" onclick="calculate('5')">5</button></td>
+		<td><button class="digit" type="button" onclick="calculate('6')">6</button></td>
+		<td><button class="operator" type="button" onclick="calculate('-')">&minus;</button></td>
+	</tr>
+	<tr>
+		<td><button class="digit" type="button" onclick="calculate('1')">1</button></td>
+		<td><button class="digit" type="button" onclick="calculate('2')">2</button></td>
+		<td><button class="digit" type="button" onclick="calculate('3')">3</button></td>
+		<td><button class="operator" type="button" onclick="calculate('×')">&times;</button></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><button class="digit" type="button" onclick="calculate('0')">0</button></td>
+		<td><button class="operator" type="button" onclick="calculate('=')">&equals;</button></td>
+		<td><button class="operator" type="button" onclick="calculate('÷')">&divide;</button></td>
+	</tr>
+</table>
+</body>
+</html>
+			
