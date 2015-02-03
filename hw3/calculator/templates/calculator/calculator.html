@@ -8,33 +8,40 @@
 <title> Calculator </title>
 </head>
 <body>
-<input class ="calcDisplay" type="text" name="calcDisplay" id="calcDisplay" value="0" readonly><br>
-<table>
-	<tr>
-		<td><button class="digit" type="button" onclick="calculate('7')">7</button></td>
-		<td><button class="digit" type="button" onclick="calculate('8')">8</button></td>
-		<td><button class="digit" type="button" onclick="calculate('9')">9</button></td>
-		<td><button class="operator" type="button" onclick="calculate('+')">&plus;</button></td>
-	</tr>
-	<tr>
-		<td><button class="digit" type="button" onclick="calculate('4')">4</button></td>
-		<td><button class="digit" type="button" onclick="calculate('5')">5</button></td>
-		<td><button class="digit" type="button" onclick="calculate('6')">6</button></td>
-		<td><button class="operator" type="button" onclick="calculate('-')">&minus;</button></td>
-	</tr>
-	<tr>
-		<td><button class="digit" type="button" onclick="calculate('1')">1</button></td>
-		<td><button class="digit" type="button" onclick="calculate('2')">2</button></td>
-		<td><button class="digit" type="button" onclick="calculate('3')">3</button></td>
-		<td><button class="operator" type="button" onclick="calculate('×')">&times;</button></td>
-	</tr>
-	<tr>
-		<td></td>
-		<td><button class="digit" type="button" onclick="calculate('0')">0</button></td>
-		<td><button class="operator" type="button" onclick="calculate('=')">&equals;</button></td>
-		<td><button class="operator" type="button" onclick="calculate('÷')">&divide;</button></td>
-	</tr>
-</table>
+{% if currDigit %}
+	<input class ="calcDisplay" type="text" name="calcDisplay" id="calcDisplay" value="{{currDigit}}" readonly><br>
+{% else %}
+	<input class ="calcDisplay" type="text" name="calcDisplay" id="calcDisplay" value="{{lastDigit}}" readonly><br>
+{% endif %}
+<form action="/calculate" method="POST">
+	<table>
+		<tr>
+			<td><input class="digit" type="submit" name="digit" value="7" ></td>
+			<td><input class="digit" type="submit" name="digit" value="8" ></td>
+			<td><input class="digit" type="submit" name="digit" value="9" ></td>
+			<td><input class="operator" type="submit" name="operator" value="+" ></td>
+		</tr>
+		<tr>
+			<td><input class="digit" type="submit" name="digit" value="4" ></td>
+			<td><input class="digit" type="submit" name="digit" value="5" ></td>
+			<td><input class="digit" type="submit" name="digit" value ="6" ></td>
+			<td><input class="operator" type="submit" name="operator" value="-" ></td>
+		</tr>
+		<tr>
+			<td><input class="digit" type="submit" name="digit" value="1" ></td>
+			<td><input class="digit" type="submit" name="digit" value="2" ></td>
+			<td><input class="digit" type="submit" name="digit" value="3" ></td>
+			<td><input class="operator" type="submit" name="operator" value="*" ></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input class="digit" type="submit" name="digit" value="0" ></td>
+			<td><input class="operator" type="submit" name="operator" value="=" ></td>
+			<td><input class="operator" type="submit" name="operator" value="/" ></td>
+		</tr>
+	</table>
+	{% csrf_token %}
+</form>
 </body>
 </html>
 			
