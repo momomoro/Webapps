@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en"> 
 <head>
-<link rel="stylesheet" type="text/css" href="css/calculator.css">
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'calculator/calculator.css' %}" />
 <meta charset="utf-8"/>
 <title> Calculator </title>
-<script src="js/calculator.js"></script>
 </head>
 <body>
 <input class ="calcDisplay" type="text" name="calcDisplay" id="calcDisplay" value="0" readonly><br>
