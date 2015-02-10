@@ -9,6 +9,21 @@
 </head>
 
 <body>
+	<div class="navbar-fixed">
+		<nav>
+			<div class="nav-wrapper">
+				<div class="col s12">
+					<ul class="right side-nav">
+						<li><a href="/socialnetwork">Home</a></li>
+						<li><a href="/socialnetwork/login">Login</a></li>
+						<li><a href="/socialnetwork/logout">Logout</a></li>
+						<li><a href="/socialnetwork/register">Register</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</div>
+						
 	{% if form.errors %}
 		<p style="color:red">
 			Incorrect user name and password.
@@ -31,10 +46,11 @@
 					<td>{{ form.password }}</td>
 				</tr>
 			</table>
-			
-			<button class="waves-effect waves-light btn" type="submit">Login</button>
-			<a href ="/socialnetwork/register" class="waves-effect waves-light btn"><i class="mdi-file-cloud left"></i>Register</a>
-			<input type="hidden" name="next" value="{{ next }}" />
+			<div class="row">
+				<button class="waves-effect waves-light btn" type="submit">Login</button>
+				<a href ="/socialnetwork/register" class="waves-effect waves-light btn"><i class="mdi-file-cloud left"></i>Register</a>
+				<input type="hidden" name="next" value="{{ next }}" />
+			</div>
 			{% csrf_token %}
 		</form>
 		

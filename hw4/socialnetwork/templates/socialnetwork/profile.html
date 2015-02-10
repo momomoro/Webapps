@@ -9,6 +9,22 @@
 </head>
 
 <body>
+
+	<div class="navbar-fixed">
+		<nav>
+			<div class="nav-wrapper">
+				<div class="col s12">
+					<ul class="right side-nav">
+						<li><a href="/socialnetwork.html">Home</a></li>
+						<li><a href="/socialnetwork/login">Login</a></li>
+						<li><a href="/socialnetwork/logout">Logout</a></li>
+						<li><a href="/socialnetwork/register">Register</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</div>
+	
 	{% for error in errors %}
 		<p style="color:red">
 			{{error}}
@@ -18,18 +34,16 @@
 	<p>
 	Here are {{user}}'s posts!
 	
-		<div class="container">
 		{% for post in posts %} 
-			<div class="row"> {{post.text}} ({{post.time.month}}/{{post.time.day}} @ {{post.time.hour}}:{{post.time.minute}}) </div>
-			<div class="row"> <a href="/socialnetwork/profile/{{post.user}}">{{post.user}}</a>
+			<div class="section">
+				<div class="row"> <div class="col s2"> {{post.text}} ({{post.time.month}}/{{post.time.day}} @ {{post.time.hour}}:{{post.time.minute}}) </div></div>
+				<div class="row"> <div class="col s2"> <a href="/socialnetwork/profile/{{post.user}}">{{post.user}}</a></div></div>
+			</div>
+			<div class="divider"></div>
 		{% endfor %}
-		</div>
-	</p>
 		
-	<div>
-		<a href="/socialnetwork/logout" class="waves-effect waves-light btn">Logout</a>
-	</div>
-	
+	</p>
+
 	
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="{% static 'js/materialize.js' %}"></script>

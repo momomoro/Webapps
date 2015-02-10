@@ -43,8 +43,8 @@ def userProfile(request,id):
 
 	print request.user
 	print id
-	posts = Post.objects.filter(user = id)
-	context = {'posts' : posts,'user' : user_id}
+	posts = Post.objects.filter(user__username = id)
+	context = {'posts' : posts,'user' : id}
 	return render(request,'socialnetwork/profile.html',context)
 	
 @transaction.atomic

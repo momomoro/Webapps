@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+from datetime import *
 
 # User class for built-in authentication module
 from django.contrib.auth.models import User
@@ -7,7 +9,7 @@ from django.contrib.auth.models import User
 class Post(models.Model):
 	text = models.CharField(max_length=160)
 	user = models.ForeignKey(User)
-	time = models.DateTimeField(auto_now=True,auto_now_add=True)
+	time = models.DateTimeField(default=datetime.now)
 	
 	def __unicode__(self):
-		return 'id=' + str(self.id) + ',text="'+ self.text + '" time='+ str(self.time)
+		return 'user=' + str(self.user) + ',text="'+ self.text + '" time='+ str(self.time)
