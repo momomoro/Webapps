@@ -1,0 +1,51 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	{% load staticfiles %}
+
+	<link rel="stylesheet" type="text/css" href="{% static 'css/materialize.css' %}" />
+    <meta charset="utf-8">
+    <title>Register to the social network</title>
+</head>
+
+<body>
+    {% for error in errors %}
+        <p style="color: red">
+            {{ error }}
+        </p>
+    {% endfor %}
+
+    <p>
+        Register to the social network:
+    </p>
+
+    <form class = "col s6" method="post" action="/socialnetwork/register">
+        <div class ="row">
+			<div class="input-field col s6">
+				<input id="username" name="username" type="text" class="validate" value="{{username}}">
+				<label for="username">Username</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
+				<input id="password1" type="password" name="password1" class="validate">
+				<label for="password1">Password</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
+				<input id="password2" type="password" name="password2" class="validate">
+				<label for="password2"> Confirm password:</label>
+			</div>
+		</div>
+
+        <input type="submit" value="Register" />
+        {% csrf_token %}
+    </form>
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/materialize.js' %}"></script>
+	
+</body>
+</html>

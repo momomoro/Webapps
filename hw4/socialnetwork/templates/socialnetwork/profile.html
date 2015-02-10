@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	{% load staticfiles %}
+
+	<link rel="stylesheet" type="text/css" href="{% static 'css/materialize.css' %}" />
+    <meta charset="utf-8">
+    <title>The social network</title>
+</head>
+
+<body>
+	{% for error in errors %}
+		<p style="color:red">
+			{{error}}
+		</p>
+	{% endfor %}
+	
+	<p>
+	Here are {{user}}'s posts!
+	
+		<div class="container">
+		{% for post in posts %} 
+			<div class="row"> {{post.text}} ({{post.time.month}}/{{post.time.day}} @ {{post.time.hour}}:{{post.time.minute}}) </div>
+			<div class="row"> <a href="/socialnetwork/profile/{{post.user}}">{{post.user}}</a>
+		{% endfor %}
+		</div>
+	</p>
+		
+	<div>
+		<a href="/socialnetwork/logout" class="waves-effect waves-light btn">Logout</a>
+	</div>
+	
+	
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/materialize.js' %}"></script>
+</body>
+</html>
