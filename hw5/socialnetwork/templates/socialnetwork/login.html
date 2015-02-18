@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	{% load staticfiles %}
+
+	<link rel="stylesheet" type="text/css" href="{% static 'css/materialize.css' %}" />
+    <meta charset="utf-8">
+    <title>Who you Be -- Login</title>
+</head>
+
+<body>
+	<div class="navbar-fixed">
+		<nav>
+			<div class="nav-wrapper">
+				<div class="col s12">
+					<ul class="right side-nav">
+						<li><a href="/socialnetwork">Home</a></li>
+						<li><a href="/socialnetwork/login">Login</a></li>
+						<li><a href="/socialnetwork/logout">Logout</a></li>
+						<li><a href="/socialnetwork/register">Register</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</div>
+						
+	{% if form.errors %}
+		<p style="color:red">
+			Incorrect user name and password.
+		</p>
+	{% endif %}
+	
+	<p>
+		Log into the social network :
+	</p>
+	
+	<div class="row">
+		<form class="col s6" method="post" action="{% url 'django.contrib.auth.views.login' %}">
+			<table class="hoverable">
+				<tr>
+					<td>{{ form.username.label_tag }}</td>
+					<td>{{ form.username }}</td>
+				</tr>
+				<tr>
+					<td>{{ form.password.label_tag }}</td>
+					<td>{{ form.password }}</td>
+				</tr>
+			</table>
+			<div class="row">
+				<button class="waves-effect waves-light btn" type="submit">Login</button>
+				<a href ="/socialnetwork/register" class="waves-effect waves-light btn"><i class="mdi-file-cloud left"></i>Register</a>
+				<input type="hidden" name="next" value="{{ next }}" />
+			</div>
+			{% csrf_token %}
+		</form>
+		
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/materialize.js' %}"></script>	
+		
+</body>
+</html>
