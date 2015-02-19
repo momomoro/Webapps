@@ -13,7 +13,6 @@ class RegistrationForm(forms.Form):
 	password2 = forms.CharField(max_length = 20,
 								label='Confirm password',
 								widget = forms.PasswordInput())
-	image = forms.FileField(upload_to="pictures",blank = True)
 								
 	def clean(self):
 	
@@ -32,13 +31,30 @@ class RegistrationForm(forms.Form):
 			raise forms.ValidationError("Username is already taken.")
 			
 		return username
-	
-	def clean_image(self):
-		image = self.cleaned_data['image']
-		if not image:
+
+class ProfileForm(forms.ModelForm):
+	class Meta:
+		model = User
+		
+		exclude = (
+			'password',
+			'last_login',
+			'username',
+			'groups',
+			'user_permissions',
+			'is_staff',
+			'is_active',
+			'is_superuser',
+			'last_login',
+			'date_joined',
+			)
+		
+	def clean_picture(self):
+		picture = self.cleaned_data['picture']
+		if not picture:
 			return None
-		if not image.content_type or image.content_type.startswith('image'):
-			raise forms.ValidationError("File type is not an image")
+		if not picture.content_type or not picture.content_type.startswith('image'):
+			raise forms.ValidationError('File type is not image')
 		return picture
 		
 class PostForm(forms.ModelForm):

@@ -51,50 +51,41 @@ def post(request):
 
 @login_required
 def userProfile(request,id):
-
+	print id
 	posts = Post.objects.filter(user__username = id)
 	context = {'posts' : posts,'user' : id}
 	return render(request,'socialnetwork/profile.html',context)
+
+@login_required
+def profile(request):
+	form = ProfileForm(instance = request.user)
+	posts = Post.objects.filter(user__username = request.user)
+	context = {'posts': posts,'profile': profile, 'form': form } 
+	return render(request,'socialnetwork/myProfile.html',context)
 	
 @login_required
 @transaction.atomic
 def editProfile(request,id):
 	errors = []
-	try:
-		if request.method == 'GET':
-			post = Post.objects.get(id=id)
-			form = EditForm(instance=post)
-			context = { 'post':post, 'form': form }
-			return render(request, 'socialnetwork/edit.html', context)	
+	try:	
 		
-		post = Post.objects.get(id=id)
-		dp_update_time = entry.update_time
-		form = EditForm(request.POST, instance=entry)
+		profile = User.objects.get(id = id)
+		form = ProfileForm(request.POST, instance=profile)
 		if not form.is_valid():
-			context = {'entry': entry, 'form': form}
-			return render(request, 'socialnetwork/edit.html', context)
+			context = {'profile': profile, 'form': form}
+			return render(request, 'socialnetwork/myProfile.html', context)
 			
-		if db_update_time != form.cleaned_data['update_time']:
-			post = Post.objects.get(id=id)
-			form = EditForm(instance=post)
-			errors.append('Post already modified')
-			context = { 'post': post,
-						'form': form,
-						'errors': errors,
-						}
-			return render(request, 'socialnetwork/edit.html',context)
-			
-		entry.update_time = datetime.now()
 		form.save()
 		
 		context = {
-			'post': post,
+			'profile': profile,
 			'form': form,
 			'errors': errors,
 		}
-		return render(request, 'socialnetwork/edit.html',context)
+		print form
+		return render(request, 'socialnetwork/myProfile.html',context)
 	except Post.DoesNotExist:
-		errors.append('Post with id={0} does not exist'.format(id) )
+		errors.append('Profile with id={0} does not exist'.format(id) )
 		context = {'errors': errors}
 		return render(request, 'socialnetwork/index.html',context)
 	

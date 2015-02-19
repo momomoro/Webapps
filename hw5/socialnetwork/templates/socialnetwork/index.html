@@ -11,7 +11,13 @@
 					{{post.update_time.hour}}:{{post.update_time.minute}}
 					</div>
 				</div>
-				<div class="row"> <div class="col s8"> <a href="{% url 'profile' post.user %}">{{post.user}}</a></div></div>
+				<div class="row valign-wrapper">
+					{% if post.user.picture %}
+						<div class="col s4">
+							<img src="{% url 'photo' item.id %}" alt="" class="circle responsive-img"> 
+						</div>
+					{% endif %}
+				<div class="col s8"> <a href="{% url 'profile' post.user %}">{{post.user}}</a></div></div>
 			<div class="divider"></div>
 			</div>
 		{% endfor %}

@@ -14,10 +14,11 @@
 			<div class="nav-wrapper">
 				<div class="col s12">
 					<ul class="right side-nav">
-						<li><a href="/socialnetwork.html">Home</a></li>
-						<li><a href="/socialnetwork/login">Login</a></li>
-						<li><a href="/socialnetwork/logout">Logout</a></li>
-						<li><a href="/socialnetwork/register">Register</a></li>
+						<li><a href="{% url 'home' %}">Home</a></li>
+						<li><a href="{% url 'myProfile' %}">Profile</a></li>
+						<li><a href="{% url 'login' %}">Login</a></li>
+						<li><a href="{% url 'logout' %}">Logout</a></li>
+						<li><a href="{% url 'register' %}">Register</a></li>
 					</ul>
 				</div>
 			</div>
