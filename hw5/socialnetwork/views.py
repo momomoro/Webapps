@@ -68,12 +68,17 @@ def profile(request):
 def editProfile(request,id):
 	errors = []
 	try:	
-		
+		if request.method == 'GET':
+			profile = User.objects.get(id=id)
+			form = ProfileForm(instance=profile)
+			context = { 'profile': profile, 'form': form }
+			return render(request, 'socialnetwork/edit.html', context)
+			
 		profile = User.objects.get(id = id)
 		form = ProfileForm(request.POST, instance=profile)
 		if not form.is_valid():
 			context = {'profile': profile, 'form': form}
-			return render(request, 'socialnetwork/myProfile.html', context)
+			return render(request, 'socialnetwork/edit.html', context)
 			
 		form.save()
 		
@@ -82,8 +87,8 @@ def editProfile(request,id):
 			'form': form,
 			'errors': errors,
 		}
-		print form
-		return render(request, 'socialnetwork/myProfile.html',context)
+		
+		return render(request, 'socialnetwork/edit.html',context)
 	except Post.DoesNotExist:
 		errors.append('Profile with id={0} does not exist'.format(id) )
 		context = {'errors': errors}

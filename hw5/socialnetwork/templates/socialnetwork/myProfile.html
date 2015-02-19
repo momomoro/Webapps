@@ -2,10 +2,7 @@
 
 {% block user-info %}
 	Welcome {{user.first_name}} {{user.last_name}} <br>
-	<form method="post" action="{% url 'edit' user.id %}">
-		<table>
-			{{form}}
-		</table>
+	<form method="GET" action="{% url 'edit' user.id %}">
 		{% csrf_token %}
 		<button class="btn waves-effect waves-light" type="submit">Edit Profile
 		</button>
