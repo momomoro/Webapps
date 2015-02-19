@@ -53,7 +53,7 @@ ROOT_URLCONF = 'webapps.urls'
 
 LOGIN_URL = '/socialnetwork/login'
 
-LOGIN_REDIRECT_URL = '/socialnetwork'
+LOGIN_REDIRECT_URL = '/socialnetwork/'
 
 WSGI_APPLICATION = 'webapps.wsgi.application'
 

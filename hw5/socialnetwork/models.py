@@ -9,7 +9,8 @@ from django.contrib.auth.models import User
 class Post(models.Model):
 	text = models.CharField(max_length=160)
 	user = models.ForeignKey(User)
-	time = models.DateTimeField(default=datetime.now)
+	creation_time = models.DateTimeField(auto_now_add=True)
+	update_time = models.DateTimeField()
 	
 	def __unicode__(self):
-		return 'user=' + str(self.user) + ',text="'+ self.text + '" time='+ str(self.time)
+		return 'user=' + str(self.user) + ',text="'+ self.text + '" time='+ str(self.creation_time)

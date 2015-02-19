@@ -1,62 +1,36 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	{% load staticfiles %}
+{% extends "socialnetwork/base.html" %}
 
-	<link rel="stylesheet" type="text/css" href="{% static 'css/materialize.css' %}" />
-    <meta charset="utf-8">
-    <title>The social network</title>
-</head>
-
-<body>
-	<div class="navbar-fixed">
-		<nav>
-			<div class="nav-wrapper">
-				<div class="col s12">
-					<ul class="right side-nav">
-						<li><a href="/socialnetwork">Home</a></li>
-						<li><a href="/socialnetwork/login">Login</a></li>
-						<li><a href="/socialnetwork/logout">Logout</a></li>
-						<li><a href="/socialnetwork/register">Register</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-	</div>
-
-	{% for error in errors %}
-		<p style="color:red">
-			{{error}}
-		</p>
-	{% endfor %}
-	
+{% block posts %}	
 	<p>
 		{% for post in posts %} 
 			<div class="section">
-				<div class="row"> <div class="col s2"> {{post.text}} ({{post.time.month}}/{{post.time.day}} @ {{post.time.hour}}:{{post.time.minute}}) </div></div>
-				<div class="row"> <div class="col s2"> <a href="/socialnetwork/profile/{{post.user}}">{{post.user}}</a></div></div>
-			</div>
+				<div class="row"> <div class="col s2"> {{post.text}} </div> </div>
+				<div class="row">
+					<div class ="col s3"> Created: {{post.creation_time.month}}/{{post.creation_time.day}} @ {{post.creation_time.hour}}:{{post.creation_time.minute}} </div>
+					<div class="col s8"> Updated: {{post.update_time.month}}/{{post.update_time.day}} @
+					{{post.update_time.hour}}:{{post.update_time.minute}}
+					</div>
+				</div>
+				<div class="row"> <div class="col s8"> <a href="{% url 'profile' post.user %}">{{post.user}}</a></div></div>
 			<div class="divider"></div>
+			</div>
 		{% endfor %}
 	</p>
 	
 	<div class="row">
-		<form class="col s12" action="/socialnetwork/post" method="post">
+		<form class="col s12" action="{% url 'post' %}" method="post">
 			<div class="row">
-				<div class="input-field col s6">
-					<i class="mdi-editor-mode-edit prefix"></i>
-					<input id="icon_prefix" type="text" class="validate" name="post">
-					<label for="icon_prefix">Post</label>
-					<button class="btn waves-effect waves-light" type="submit">Submit
+				<div class="col s6">
+					<table>
+						{{form}}
+					</table>
+					<button class="btn waves-effect waves-light" type="submit">Post
 						<i class="mdi-content-send right"></i>
 					</button>
 					{% csrf_token %}
 				</div>
 			</div>
 		</form>
-	
-	
-	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script type="text/javascript" src="{% static 'js/materialize.js' %}"></script>
-</body>
-</html>
+	</div>
+		
+{% endblock %}

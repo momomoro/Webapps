@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 
 # Decorator to use built-in authentication system
@@ -12,85 +13,120 @@ from django.contrib.auth import login, authenticate
 from django.db import transaction
 
 from socialnetwork.models import *
+from socialnetwork.forms import *
 
-import datetime
+from datetime import datetime
 
 
 @login_required
 def home(request):
 	posts = Post.objects.all()
-	return render(request,'socialnetwork/index.html',{'posts': posts})
+	context = {'posts': posts, 'form': PostForm() }
+	print context['posts']
+	return render(request,'socialnetwork/index.html',context)
 
 @login_required
 @transaction.atomic	
 def post(request):
 	errors = []
 	
-	print request.POST
-	
-	if 'post' not in request.POST or not request.POST['post']:
-		errors.append('You must enter a post.')
-	else:
-		new_post = Post(text=request.POST['post'], user=request.user)
-		new_post.save()
+	if request.method == 'GET':
+		context = {'form': PostForm() }
+		return render(request,'socialnetwork/index.html',context)
 		
+	new_post = Post(user=request.user,
+				creation_time=datetime.now(),
+				update_time=datetime.now())
+	post_form = PostForm(request.POST, instance=new_post)
+	if not post_form.is_valid():
+		context = {'form': post_form }
+		return render(request, 'socialnetwork/index.html',context)
+		
+	post_form.save()
+		
+	edit_form = EditForm(instance=new_post)	
 	posts = Post.objects.all()
-	context = {'posts' : posts, 'errors':errors}
+	context = {'posts' : posts, 'errors':errors, 'form':edit_form }
 	return render(request, 'socialnetwork/index.html',context)
 
 @login_required
 def userProfile(request,id):
 
-	print request.user
-	print id
 	posts = Post.objects.filter(user__username = id)
 	context = {'posts' : posts,'user' : id}
 	return render(request,'socialnetwork/profile.html',context)
+	
+@login_required
+@transaction.atomic
+def editProfile(request,id):
+	errors = []
+	try:
+		if request.method == 'GET':
+			post = Post.objects.get(id=id)
+			form = EditForm(instance=post)
+			context = { 'post':post, 'form': form }
+			return render(request, 'socialnetwork/edit.html', context)	
+		
+		post = Post.objects.get(id=id)
+		dp_update_time = entry.update_time
+		form = EditForm(request.POST, instance=entry)
+		if not form.is_valid():
+			context = {'entry': entry, 'form': form}
+			return render(request, 'socialnetwork/edit.html', context)
+			
+		if db_update_time != form.cleaned_data['update_time']:
+			post = Post.objects.get(id=id)
+			form = EditForm(instance=post)
+			errors.append('Post already modified')
+			context = { 'post': post,
+						'form': form,
+						'errors': errors,
+						}
+			return render(request, 'socialnetwork/edit.html',context)
+			
+		entry.update_time = datetime.now()
+		form.save()
+		
+		context = {
+			'post': post,
+			'form': form,
+			'errors': errors,
+		}
+		return render(request, 'socialnetwork/edit.html',context)
+	except Post.DoesNotExist:
+		errors.append('Post with id={0} does not exist'.format(id) )
+		context = {'errors': errors}
+		return render(request, 'socialnetwork/index.html',context)
 	
 @transaction.atomic
 def register(request):
     context = {}
 
-    # Just display the registration form if this is a GET request
+    # Just display the registration form if this is a GET request.
     if request.method == 'GET':
+        context['form'] = RegistrationForm()
         return render(request, 'socialnetwork/register.html', context)
 
-    errors = []
-    context['errors'] = errors
+    # Creates a bound form from the request POST parameters and makes the 
+    # form available in the request context dictionary.
+    form = RegistrationForm(request.POST)
+    context['form'] = form
 
-    # Checks the validity of the form data
-    if not 'username' in request.POST or not request.POST['username']:
-    	errors.append('Username is required.')
-    else:
-        # Save the username in the request context to re-fill the username
-        # field in case the form has errrors
-        context['username'] = request.POST['username']
-
-    if not 'password1' in request.POST or not request.POST['password1']:
-        errors.append('Password is required.')
-    if not 'password2' in request.POST or not request.POST['password2']:
-        errors.append('Confirm password is required.')
-
-    if 'password1' in request.POST and 'password2' in request.POST \
-            and request.POST['password1'] and request.POST['password2'] \
-            and request.POST['password1'] != request.POST['password2']:
-        errors.append('Passwords did not match.')
-
-    if len(User.objects.filter(username = request.POST['username'])) > 0:
-        errors.append('Username is already taken.')
-
-    if errors:
+    # Validates the form.
+    if not form.is_valid():
         return render(request, 'socialnetwork/register.html', context)
 
-    # Creates the new user from the valid form data
-    new_user = User.objects.create_user(username=request.POST['username'], \
-                                        password=request.POST['password1'])
+    # At this point, the form data is valid.  Register and login the user.
+    new_user = User.objects.create_user(username=form.cleaned_data['username'], 
+                                        password=form.cleaned_data['password1'],
+                                        first_name=form.cleaned_data['first_name'],
+                                        last_name=form.cleaned_data['last_name'])
     new_user.save()
 
     # Logs in the new user and redirects to his/her todo list
-    new_user = authenticate(username=request.POST['username'], \
-                            password=request.POST['password1'])
+    new_user = authenticate(username=form.cleaned_data['username'],
+                            password=form.cleaned_data['password1'])
     login(request, new_user)
-    return redirect('/socialnetwork/')
+    return redirect(reverse('home'))
 	
 	

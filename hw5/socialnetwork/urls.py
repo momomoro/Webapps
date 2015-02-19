@@ -6,12 +6,14 @@ urlpatterns = patterns('',
     # url(r'^$', 'webapps.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-	url(r'^$','socialnetwork.views.home'),
-	url(r'^post','socialnetwork.views.post'),
-	url(r'^login$','django.contrib.auth.views.login',{'template_name':'socialnetwork/login.html'}),
-	url(r'^logout$', 'django.contrib.auth.views.logout_then_login'),
-	url(r'^register$','socialnetwork.views.register'),
-	url(r'^profile/(?P<id>\w+)','socialnetwork.views.userProfile'),
+	url(r'^$','socialnetwork.views.home', name = 'home'),
+	url(r'^post','socialnetwork.views.post', name='post'),
+	url(r'^login$','django.contrib.auth.views.login',{'template_name':'socialnetwork/login.html'},name='login'),
+	url(r'^logout$', 'django.contrib.auth.views.logout_then_login',name='logout'),
+	url(r'^register$','socialnetwork.views.register',name='register'),
+	url(r'^profile/(?P<id>\w+)','socialnetwork.views.userProfile',name='profile'),
+	url(r'^edit/(\d+)$','socialnetwork.views.editProfile',name='edit'),
+	url(r'^myProfile$','socialnetwork.views.userProfile',name='myProfile'),
 
 	
 )
