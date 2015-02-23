@@ -1,0 +1,13 @@
+{% extends "socialnetwork/base.html" %}
+
+{% block user-info %}
+	Welcome {{user.first_name}} {{user.last_name}} <br>
+	<form method="post" action="{% url 'edit' user.id %}">
+		<table>
+			{{form}}
+		</table>
+		{% csrf_token %}
+		<button class="btn waves-effect waves-light" type="submit">Edit Profile
+		</button>
+	</form>
+	{% endblock %}
