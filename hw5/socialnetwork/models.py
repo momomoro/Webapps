@@ -8,9 +8,8 @@ from datetime import *
 # User class for built-in authentication module
 from django.contrib.auth.models import User
 
-class Blogger(User):
-	user = models.OneToOneField(User)
-	objects = UserManager()
+class Blogger(models.Model):
+	user = models.OneToOneField(User, primary_key=True)
 	following = models.ManyToManyField(User, symmetrical = False,blank=True, related_name="followers")
 	picture = models.FileField(upload_to="pictures",blank=True)
 	
@@ -26,6 +25,6 @@ class Post(models.Model):
 	update_time = models.DateTimeField()
 	
 	def __unicode__(self):
-		return 'user=' + str(self.user) + ',text="'+ self.text + '" time='+ str(self.creation_time)
+		return 'id=' + str(self.id) + 'user=' + str(self.user) + ',text="'+ self.text + '" time='+ str(self.creation_time)
 		
 

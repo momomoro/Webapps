@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -26,6 +26,17 @@ def home(request):
 	return render(request,'socialnetwork/index.html',context)
 
 @login_required
+def delete(request, id):
+		if request.method != 'POST':
+			return render(request,'socialnetwork/index.html')
+		
+		post = get_object_or_404(Post,id=id)
+		if post.user != request.user:
+			return render(request,'socialnetwork/index.html')
+		post.delete()
+		return (request,'socialnetwork/index.html')
+	
+@login_required
 @transaction.atomic	
 def post(request):
 	errors = []
@@ -43,10 +54,9 @@ def post(request):
 		return render(request, 'socialnetwork/index.html',context)
 		
 	post_form.save()
-		
-	edit_form = EditForm(instance=new_post)	
+			
 	posts = Post.objects.all()
-	context = {'posts' : posts, 'errors':errors, 'form':edit_form }
+	context = {'posts' : posts, 'errors':errors, 'form':PostForm() }
 	return render(request, 'socialnetwork/index.html',context)
 
 @login_required
@@ -69,12 +79,12 @@ def editProfile(request,id):
 	errors = []
 	try:	
 		if request.method == 'GET':
-			profile = User.objects.get(id=id)
+			profile = Blogger.objects.get(request.user)
 			form = ProfileForm(instance=profile)
 			context = { 'profile': profile, 'form': form }
 			return render(request, 'socialnetwork/edit.html', context)
 			
-		profile = User.objects.get(id = id)
+		profile = Blogger.objects.get(request.user)
 		form = ProfileForm(request.POST, instance=profile)
 		if not form.is_valid():
 			context = {'profile': profile, 'form': form}
@@ -96,33 +106,35 @@ def editProfile(request,id):
 	
 @transaction.atomic
 def register(request):
-    context = {}
-
+	context = {}
     # Just display the registration form if this is a GET request.
-    if request.method == 'GET':
-        context['form'] = RegistrationForm()
-        return render(request, 'socialnetwork/register.html', context)
+	if request.method == 'GET':
+		context['form'] = RegistrationForm()
+		return render(request, 'socialnetwork/register.html', context)
 
     # Creates a bound form from the request POST parameters and makes the 
     # form available in the request context dictionary.
-    form = RegistrationForm(request.POST)
-    context['form'] = form
+	form = RegistrationForm(request.POST)
+	context['form'] = form
 
     # Validates the form.
-    if not form.is_valid():
-        return render(request, 'socialnetwork/register.html', context)
+	if not form.is_valid():
+		return render(request, 'socialnetwork/register.html', context)
 
     # At this point, the form data is valid.  Register and login the user.
-    new_user = User.objects.create_user(username=form.cleaned_data['username'], 
+	new_user = User.objects.create_user(username=form.cleaned_data['username'], 
                                         password=form.cleaned_data['password1'],
                                         first_name=form.cleaned_data['first_name'],
                                         last_name=form.cleaned_data['last_name'])
-    new_user.save()
-
+	new_user.save()
+	
+	new_blogger = Blogger(user=new_user)
+	new_blogger.save()
+		
     # Logs in the new user and redirects to his/her todo list
-    new_user = authenticate(username=form.cleaned_data['username'],
-                            password=form.cleaned_data['password1'])
-    login(request, new_user)
-    return redirect(reverse('home'))
+	new_user = authenticate(username=form.cleaned_data['username'],
+							password=form.cleaned_data['password1'])
+	login(request, new_user)
+	return redirect(reverse('home'))
 	
 	

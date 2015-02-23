@@ -4,12 +4,11 @@
 	<p>
 		{% for post in posts %} 
 			<div class="section">
-				<div class="row"> <div class="col s2"> {{post.text}} </div> </div>
-				<div class="row">
-					<div class ="col s3"> Created: {{post.creation_time.month}}/{{post.creation_time.day}} @ {{post.creation_time.hour}}:{{post.creation_time.minute}} </div>
-					<div class="col s8"> Updated: {{post.update_time.month}}/{{post.update_time.day}} @
+				<div class="row"> <div class="col s2"> {{post.text}} </div> </div> 
+				<div class ="col s3"> Created: {{post.creation_time.month}}/{{post.creation_time.day}} @ {{post.creation_time.hour}}:{{post.creation_time.minute}} </div>
+				<div class="col s8"> Updated: {{post.update_time.month}}/{{post.update_time.day}} @
 					{{post.update_time.hour}}:{{post.update_time.minute}}
-					</div>
+				</div>
 				</div>
 				<div class="row valign-wrapper">
 					{% if post.user.picture %}
@@ -17,7 +16,14 @@
 							<img src="{% url 'photo' item.id %}" alt="" class="circle responsive-img"> 
 						</div>
 					{% endif %}
-				<div class="col s8"> <a href="{% url 'profile' post.user %}">{{post.user}}</a></div></div>
+				<div class="col s8"> <a href="{% url 'profile' post.user %}">{{post.user}}</a></div>
+				<form class="col s10" action="/socialnetwork/delete/{{post.id}}" method="POST">
+					<button class="btn waves-effect waves-light" type="submit">Delete
+						<i class="mdi-content"></i>
+					</button>
+					{% csrf_token %}
+				</form>
+				</div>
 			<div class="divider"></div>
 			</div>
 		{% endfor %}

@@ -49,14 +49,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-AUTH_USER_MODEL = 'auth.User'
-
-CUSTOM_USER_MODEL = 'socialnetwork.Blogger'
-
 AUTHENTICATION_BACKENDS = (
-    'webapps.auth_backends.CustomUserModelBackend',
-	'django.contrib.auth.backends.ModelBackend',
-)
+	'django.contrib.auth.backends.ModelBackend',)
+
 ROOT_URLCONF = 'webapps.urls'
 
 LOGIN_URL = '/socialnetwork/login'

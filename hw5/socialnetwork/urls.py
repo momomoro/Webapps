@@ -13,6 +13,7 @@ urlpatterns = patterns('',
 	url(r'^register$','socialnetwork.views.register',name='register'),
 	url(r'^profile/(?P<id>\w+)','socialnetwork.views.userProfile',name='profile'),
 	url(r'^edit/(?P<id>\d+)','socialnetwork.views.editProfile',name='edit'),
+	url(r'^delete/(\d+)$','socialnetwork.views.delete', name='delete'),
 	url(r'^myProfile$','socialnetwork.views.profile',name='myProfile'),
 
 	
