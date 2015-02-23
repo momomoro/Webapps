@@ -20,21 +20,29 @@ from datetime import datetime
 
 @login_required
 def home(request):
-	posts = Post.objects.all()
+	posts = Post.objects.order_by('-creation_time')
 	context = {'posts': posts, 'form': PostForm() }
 	print context['posts']
 	return render(request,'socialnetwork/index.html',context)
 
 @login_required
 def delete(request, id):
-		if request.method != 'POST':
-			return render(request,'socialnetwork/index.html')
-		
-		post = get_object_or_404(Post,id=id)
+	context = {}
+	if request.method != 'POST':
+		return render(request,'socialnetwork/index.html')
+	
+	try:
+		post = Post.objects.get(id=id)
 		if post.user != request.user:
-			return render(request,'socialnetwork/index.html')
+			context['message'] = "You can only delete your own posts"
+			return render(request,'socialnetwork/index.html',context)		
 		post.delete()
-		return (request,'socialnetwork/index.html')
+	except ObjectDoesNotExist:
+		message = "Post does not exist"
+	posts = Post.objects.order_by('-creation_time')
+	message = ''
+	context = {'posts': posts,'message':message}
+	return render(request,'socialnetwork/index.html',context)
 	
 @login_required
 @transaction.atomic	
@@ -55,21 +63,25 @@ def post(request):
 		
 	post_form.save()
 			
-	posts = Post.objects.all()
+	posts = Post.objects.order_by('-creation_time')
 	context = {'posts' : posts, 'errors':errors, 'form':PostForm() }
 	return render(request, 'socialnetwork/index.html',context)
 
 @login_required
 def userProfile(request,id):
-	print id
-	posts = Post.objects.filter(user__username = id)
-	context = {'posts' : posts,'user' : id}
+	context = {}
+	try:
+		User.objects.get(username = str(id))
+		posts = Post.objects.filter(user__username = id).order_by('-creation_time')
+		context = {'posts' : posts,'user' : id}
+	except User.DoesNotExist:
+		context = {'message' : 'User does not exist'}
 	return render(request,'socialnetwork/profile.html',context)
 
 @login_required
 def profile(request):
 	form = ProfileForm(instance = request.user)
-	posts = Post.objects.filter(user__username = request.user)
+	posts = Post.objects.filter(user__username = request.user).order_by('-creation_time')
 	context = {'posts': posts,'profile': profile, 'form': form } 
 	return render(request,'socialnetwork/myProfile.html',context)
 	

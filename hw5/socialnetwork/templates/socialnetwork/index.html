@@ -1,5 +1,11 @@
 {% extends "socialnetwork/base.html" %}
 
+{% block user-info %}
+	{% if message %}
+		<div>{{message}}</div>
+	{% endif %}
+{% endblock %}
+
 {% block posts %}	
 	<p>
 		{% for post in posts %} 
