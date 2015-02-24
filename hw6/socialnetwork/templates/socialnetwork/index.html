@@ -1,10 +1,28 @@
 {% extends "socialnetwork/base.html" %}
 
-{% block posts %}	
+{% block user-info %}
+	{% if message %}
+		<div>{{message}}</div>
+	{% endif %}
+{% endblock %}
+
+{% block posts %}
 	<p>
 		{% for post in posts %} 
-			<div class="section">
-				<div class="row"> <div class="col s2"> {{post.text}} </div> </div> 
+			<div class="card large">
+			<div class="card-content">
+				<div class="row"> <span class="activator"> {{post.text}} </span> </div>
+			<span> <a href="{% url 'profile' post.user %}">{{post.user}}</a></span>
+			</div>
+			<div class="card-reveal">
+				<div class="card-title grey-text text-darken-4">Post Info + Comments <i class="mdi-navigation-close"></i></div>
+				<div class="row">
+					{% for comment in post.comments.all %}
+						<div class="row">{{comment.text}}</div>
+						<div class="row"> 
+							<div class="col s4"><a href="{% url 'profile' comment.user %}">{{comment.user}}</a></div>
+						</div>
+					{% endfor %}
 				<div class ="col s3"> Created: {{post.creation_time.month}}/{{post.creation_time.day}} @ {{post.creation_time.hour}}:{{post.creation_time.minute}} </div>
 				<div class="col s8"> Updated: {{post.update_time.month}}/{{post.update_time.day}} @
 					{{post.update_time.hour}}:{{post.update_time.minute}}
@@ -16,16 +34,29 @@
 							<img src="{% url 'photo' item.id %}" alt="" class="circle responsive-img"> 
 						</div>
 					{% endif %}
-				<div class="col s8"> <a href="{% url 'profile' post.user %}">{{post.user}}</a></div>
-				<form class="col s10" action="/socialnetwork/delete/{{post.id}}" method="POST">
-					<button class="btn waves-effect waves-light" type="submit">Delete
-						<i class="mdi-content"></i>
-					</button>
+				<form class="col s12" action="{% url 'comment' post.id %}" method="POST">
+					<div class="row">
+						<div class="col s6>
+							<table>
+								{{comment}}
+							</table>
+							<button class="btn waves-effect waves-light" type="submit">Comment
+								<i class="mdi-content-send right"></i>
+							</button>
+							{% csrf_token %}
+						</div>
+					</div>
+				</form>
+				<form action="/socialnetwork/delete/{{post.id}}" method="POST">
+						<button class="btn waves-effect waves-light" type="submit">Delete
+							<i class="mdi-content"></i>
+						</button>
 					{% csrf_token %}
 				</form>
 				</div>
-			<div class="divider"></div>
+				</div>
 			</div>
+			<div class="divider"></div>
 		{% endfor %}
 	</p>
 	

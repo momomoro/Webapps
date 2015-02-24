@@ -17,14 +17,25 @@ class Blogger(models.Model):
 		return 'user=' + str(self.user)
 		
 
+class Comment(models.Model):
+	text = models.CharField(max_length=160)
+	user = models.ForeignKey(User)
+	creation_time = models.DateTimeField(auto_now_add=True)
+	update_time = models.DateTimeField()		
+		
 # Data model for a socialnetwork post
 class Post(models.Model):
 	text = models.CharField(max_length=160)
 	user = models.ForeignKey(User)
 	creation_time = models.DateTimeField(auto_now_add=True)
 	update_time = models.DateTimeField()
+	comments = models.ManyToManyField(Comment,blank=True,symmetrical = False)
 	
 	def __unicode__(self):
 		return 'id=' + str(self.id) + 'user=' + str(self.user) + ',text="'+ self.text + '" time='+ str(self.creation_time)
+		
+
+		
+	
 		
 

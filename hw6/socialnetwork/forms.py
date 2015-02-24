@@ -62,6 +62,16 @@ class PostForm(forms.ModelForm):
 	class Meta:
 		model = Post
 		exclude = (
+			'comments',
+			'user',
+			'creation_time',
+			'update_time',
+		)
+		
+class CommentForm(forms.ModelForm):
+	class Meta:
+		model = Comment
+		exclude = (
 			'user',
 			'creation_time',
 			'update_time',
