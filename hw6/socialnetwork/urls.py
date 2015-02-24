@@ -15,6 +15,7 @@ urlpatterns = patterns('',
 	url(r'^edit/(?P<id>\d+)$','socialnetwork.views.editProfile',name='edit'),
 	url(r'^comment/(\d+)$','socialnetwork.views.comment', name='comment'),
 	url(r'^delete/(\d+)$','socialnetwork.views.delete', name='delete'),
+	url(r'^get-posts$','socialnetwork.views.get_posts',name='get posts'),
 	url(r'^myProfile$','socialnetwork.views.profile',name='myProfile'),
 
 	

@@ -114,12 +114,12 @@ def editProfile(request,id):
 	errors = []
 	try:	
 		if request.method == 'GET':
-			profile = Blogger.objects.get(request.user)
+			profile = User.objects.get(id = id)
 			form = ProfileForm(instance=profile)
 			context = { 'profile': profile, 'form': form }
 			return render(request, 'socialnetwork/edit.html', context)
 			
-		profile = Blogger.objects.get(request.user)
+		profile = User.objects.get(id = id)
 		form = ProfileForm(request.POST, instance=profile)
 		if not form.is_valid():
 			context = {'profile': profile, 'form': form}
@@ -138,7 +138,11 @@ def editProfile(request,id):
 		errors.append('Profile with id={0} does not exist'.format(id) )
 		context = {'errors': errors}
 		return render(request, 'socialnetwork/index.html',context)
-	
+
+def get_posts(request):
+	reponse_text = serializers.serialize('json',Posts.objects.all())
+	return HttpResponse(response_text, content_type='application/json')
+		
 @transaction.atomic
 def register(request):
 	context = {}

@@ -8,7 +8,8 @@
 
 {% block posts %}
 	<p>
-		{% for post in posts %} 
+		<div id="posts">
+		{% for post in posts %}
 			<div class="card large">
 			<div class="card-content">
 				<div class="row"> <span class="activator"> {{post.text}} </span> </div>
@@ -21,6 +22,8 @@
 						<div class="row">{{comment.text}}</div>
 						<div class="row"> 
 							<div class="col s4"><a href="{% url 'profile' comment.user %}">{{comment.user}}</a></div>
+							<div class="col s8"> Created: {{comment.creation_time.month}}/{{comment.creation_time.day}} @ {{comment.creation_time.hour}}:{{comment.creation_time.minute}}
+						</div>
 						</div>
 					{% endfor %}
 				<div class ="col s3"> Created: {{post.creation_time.month}}/{{post.creation_time.day}} @ {{post.creation_time.hour}}:{{post.creation_time.minute}} </div>
@@ -58,6 +61,7 @@
 			</div>
 			<div class="divider"></div>
 		{% endfor %}
+		</div>
 	</p>
 	
 	<div class="row">
