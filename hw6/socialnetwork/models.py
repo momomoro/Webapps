@@ -12,6 +12,7 @@ class Blogger(models.Model):
 	user = models.OneToOneField(User, primary_key=True)
 	following = models.ManyToManyField(User, symmetrical = False,blank=True, related_name="followers")
 	picture = models.FileField(upload_to="pictures",blank=True)
+	content_type = models.CharField(max_length=50)
 	
 	def __unicode__(self):
 		return 'user=' + str(self.user)

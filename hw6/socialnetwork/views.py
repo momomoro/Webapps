@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse, Http404
 
 # Decorator to use built-in authentication system
 from django.contrib.auth.decorators import login_required
@@ -20,16 +21,16 @@ from datetime import datetime
 
 @login_required
 def home(request):
+	print request.user.blogger.picture
 	posts = Post.objects.order_by('-creation_time')
 	context = {'posts': posts, 'form': PostForm(), 'comment': CommentForm() }
-	print context['posts']
 	return render(request,'socialnetwork/index.html',context)
 
 @login_required
 def delete(request, id):
 	context = {}
 	if request.method != 'POST':
-		return render(request,'socialnetwork/index.html')
+		return render(request,'/socialnetwork/index.html')
 	
 	try:
 		post = Post.objects.get(id=id)
@@ -37,11 +38,11 @@ def delete(request, id):
 			message = "You can only delete your own posts"
 			posts = posts = Post.objects.order_by('-creation_time')
 			context = {'message': message,'posts': posts, 'form': PostForm() }
-			return render(request,'socialnetwork/index.html',context)		
+			return render(request,'/socialnetwork/index.html',context)		
 		post.delete()
 	except ObjectDoesNotExist:
 		message = "Post does not exist"
-	return redirect('socialnetwork/index.html')
+	return redirect('/socialnetwork/index.html')
 
 @login_required
 @transaction.atomic
@@ -94,7 +95,9 @@ def post(request):
 def userProfile(request,id):
 	context = {}
 	try:
-		User.objects.get(username = str(id))
+		user = User.objects.get(username = str(id)) #check if user exists
+		print user.blogger
+		print user.blogger.picture
 		posts = Post.objects.filter(user__username = id).order_by('-creation_time')
 		context = {'posts' : posts,'user' : id}
 	except User.DoesNotExist:
@@ -111,6 +114,8 @@ def profile(request):
 @login_required
 @transaction.atomic
 def editProfile(request,id):
+	print request.FILES
+	
 	errors = []
 	try:	
 		if request.method == 'GET':
@@ -120,27 +125,30 @@ def editProfile(request,id):
 			return render(request, 'socialnetwork/edit.html', context)
 			
 		profile = User.objects.get(id = id)
-		form = ProfileForm(request.POST, instance=profile)
+		form = ProfileForm(request.POST,request.FILES, instance=profile.blogger)
 		if not form.is_valid():
 			context = {'profile': profile, 'form': form}
 			return render(request, 'socialnetwork/edit.html', context)
-			
-		form.save()
-		
+		else:
+			if form.cleaned_data['picture']:
+				profile.blogger.content_type = form.cleaned_data['picture'].content_type
+				print 'content type =', form.cleaned_data['picture'].content_type
+				
+				
+			form.save()	
 		context = {
 			'profile': profile,
-			'form': form,
 			'errors': errors,
 		}
 		
-		return render(request, 'socialnetwork/edit.html',context)
+		return redirect("/socialnetwork/myProfile")
 	except Post.DoesNotExist:
 		errors.append('Profile with id={0} does not exist'.format(id) )
 		context = {'errors': errors}
 		return render(request, 'socialnetwork/index.html',context)
 
 def get_posts(request):
-	reponse_text = serializers.serialize('json',Posts.objects.all())
+	reponse_text = serializers.serialize('json',Post.objects.all())
 	return HttpResponse(response_text, content_type='application/json')
 		
 @transaction.atomic
@@ -175,5 +183,11 @@ def register(request):
 							password=form.cleaned_data['password1'])
 	login(request, new_user)
 	return redirect(reverse('home'))
+	
+def get_photo(request, id):
+	profile = get_object_or_404(User, id=id)
+	if not profile.blogger.picture:
+		raise Http404	
+	return HttpResponse(profile.blogger.picture)
 	
 	

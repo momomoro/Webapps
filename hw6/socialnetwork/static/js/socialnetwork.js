@@ -1,4 +1,4 @@
-window.setInterval(function () {
+/*window.setInterval(function () {
     $.ajax({
         url: "/socialnetwork/get-posts",
         dataType : "json",
@@ -9,6 +9,23 @@ window.setInterval(function () {
             $(posts).each(function() {
                 $("#posts").html(
                     this 
+                );
+            });
+        }
+    });
+}, 5000);*/
+
+window.setInterval(function () {
+    $.ajax({
+        url: "/socialnetwork/get-posts",
+        dataType : "json",
+        success: function( posts ) {
+            
+
+            // refresh the page with posts
+            $(posts).each(function() {
+                $("#test").html(
+                    this.pk 
                 );
             });
         }

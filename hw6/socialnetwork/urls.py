@@ -17,6 +17,7 @@ urlpatterns = patterns('',
 	url(r'^delete/(\d+)$','socialnetwork.views.delete', name='delete'),
 	url(r'^get-posts$','socialnetwork.views.get_posts',name='get posts'),
 	url(r'^myProfile$','socialnetwork.views.profile',name='myProfile'),
+	url(r'^photo/(?P<id>\d+)$','socialnetwork.views.get_photo',name='photo'),
 
 	
 )

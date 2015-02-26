@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('user', models.OneToOneField(primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
                 ('picture', models.FileField(upload_to=b'pictures', blank=True)),
+                ('content_type', models.CharField(max_length=50)),
                 ('following', models.ManyToManyField(related_name='followers', to=settings.AUTH_USER_MODEL, blank=True)),
             ],
             options={

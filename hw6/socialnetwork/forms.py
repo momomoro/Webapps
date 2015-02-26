@@ -33,10 +33,16 @@ class RegistrationForm(forms.Form):
 		return username
 
 class ProfileForm(forms.ModelForm):
+
+	first_name = forms.CharField(max_length=200)
+	last_name = forms.CharField(max_length=200)
+	
 	class Meta:
 		model = Blogger
-		
+			
 		exclude = (
+			'content_type',
+			'user',
 			'following',
 			'password',
 			'last_login',
