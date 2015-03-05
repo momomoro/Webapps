@@ -18,6 +18,7 @@ urlpatterns = patterns('',
 	url(r'^get-posts$','socialnetwork.views.get_posts',name='get posts'),
 	url(r'^myProfile$','socialnetwork.views.profile',name='myProfile'),
 	url(r'^photo/(?P<id>\d+)$','socialnetwork.views.get_photo',name='photo'),
-
-	
+	# The following URL should match any username valid in Django and
+    # any token produced by the default_token_generator
+    url(r'^confirm-registration/(?P<username>[a-zA-Z0-9_@\+\-]+)/(?P<token>[a-z0-9\-]+)$', 'addrbook.views.confirm_registration', name='confirm'),	
 )

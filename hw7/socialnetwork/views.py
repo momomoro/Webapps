@@ -173,16 +173,43 @@ def register(request):
                                         password=form.cleaned_data['password1'],
                                         first_name=form.cleaned_data['first_name'],
                                         last_name=form.cleaned_data['last_name'])
+	new_user.is_active = False
 	new_user.save()
 	
 	new_blogger = Blogger(user=new_user)
 	new_blogger.save()
 		
-    # Logs in the new user and redirects to his/her todo list
-	new_user = authenticate(username=form.cleaned_data['username'],
-							password=form.cleaned_data['password1'])
-	login(request, new_user)
-	return redirect(reverse('home'))
+		
+        # Generate a one-time use token and an email message body
+    token = default_token_generator.make_token(new_user)
+
+    email_body = """
+Welcome to the Simple Address Book.  Please click the link below to
+verify your email address and complete the registration of your account:
+  http://%s%s
+""" % (request.get_host(), 
+       reverse('confirm', args=(new_user.username, token)))
+
+    send_mail(subject="Verify your email address",
+              message= email_body,
+              from_email="wmilner@andrew.cmu.edu",
+              recipient_list=[new_user.email])
+
+    context['email'] = form.cleaned_data['email']
+    return render(request, 'socialnetwork/needs-confirmation.html', context)
+
+@transaction.atomic
+def confirm_registration(request, username, token):
+    user = get_object_or_404(User, username=username)
+
+    # Send 404 error if token is invalid
+    if not default_token_generator.check_token(user, token):
+        raise Http404
+
+    # Otherwise token was valid, activate the user.
+    user.is_active = True
+    user.save()
+    return render(request, 'socialnetwork/confirmed.html', {})
 	
 def get_photo(request, id):
 	profile = get_object_or_404(User, id=id)
