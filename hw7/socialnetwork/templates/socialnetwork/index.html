@@ -1,0 +1,94 @@
+{% extends "socialnetwork/base.html" %}
+
+{% block user-info %}
+	{% if message %}
+		<div>{{message}}</div>
+	{% endif %}
+{% endblock %}
+
+{% block posts %}
+	<p>
+		<div id="posts">
+		{% for post in posts %}
+			<div id="postcard" class="card large">
+			<div class="card-content">
+				<div class="row valign-wrapper">
+					{% if post.user.blogger.picture %}
+						<div class="col s2">
+							<img src="{% url 'photo' user.id %}" alt="" class=" activator circle responsive-img"> 
+						</div>
+					{% endif %}	
+					<div class="col s10">
+					<span class="activator"> {{post.text}} </span>
+					</div>
+				</div>
+			<span> <a href="{% url 'profile' post.user %}">{{post.user}}</a></span>
+			<form action="/socialnetwork/delete/{{post.id}}" method="POST">
+			<div class="row">
+					<button class="col s1 offset-s6 btn waves-effect waves-light" type="submit">Delete
+						<i class="mdi-content"></i>
+					</button>
+				{% csrf_token %} 
+			</div>
+			</form>
+			</div>
+			<div class="card-reveal">
+				<div class="row">
+				<div class="card-title grey-text text-darken-4">Post Info + Comments <i class="mdi-navigation-close"></i></div>
+				</div>
+				<div class="row">
+				<div id="comment" class="col s6 card-pnael purple darken-4">
+					{% for comment in post.comments.all %}
+						<div class="row grey-text text-lighten-5">{{comment.text}}</div>
+						<div class="row"> 
+							<div class="col s4"><a href="{% url 'profile' comment.user %}">{{comment.user}}</a></div>
+							<div class="col s8 grey-text text-lighten-5"> Created: {{comment.creation_time.month}}/{{comment.creation_time.day}} @ {{comment.creation_time.hour}}:{{comment.creation_time.minute}}
+							</div>
+						</div>
+						<div class="divider"></div>
+					{% endfor %}
+				</div>
+				</div>
+				<div class="row">
+				<div class ="col s3"> Created: {{post.creation_time.month}}/{{post.creation_time.day}} @ {{post.creation_time.hour}}:{{post.creation_time.minute}} </div>
+				<div class="col s8"> Updated: {{post.update_time.month}}/{{post.update_time.day}} @
+					{{post.update_time.hour}}:{{post.update_time.minute}}
+				</div>
+				</div>
+				<form class="col s12" action="{% url 'comment' post.id %}" method="POST">
+					<div class="row">
+						<div class="col s6>
+							<table>
+								{{comment}}
+							</table>
+							<button id="comment" class="btn waves-effect waves-light">Comment
+								<i class="mdi-content-send right"></i>
+							</button>
+							{% csrf_token %}
+						</div>
+					</div>
+				</form>
+				</div>
+				</div>
+			<div class="divider"></div>
+		{% endfor %}
+		</div>
+	</p>
+	
+	<div class="row">
+		<form class="col s12" action="{% url 'post' %}" method="post">
+			<div class="row">
+				<div class="col s6">
+					<table>
+						{{form}}
+					</table>
+					<button class="btn waves-effect waves-light" type="submit">Post
+						<i class="mdi-content-send right"></i>
+					</button>
+					{% csrf_token %}
+				</div>
+			</div>
+		</form>
+	</div>
+		
+{% endblock %}
