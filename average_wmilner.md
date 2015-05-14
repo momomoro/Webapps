@@ -4,17 +4,17 @@ Course Average Computation
 
 ### Andrew ID: wmilner
 
-#### HW1 Score: 100
-#### HW2 Score: 89
-#### HW3 Score: 89
-#### HW4 Score: 97
-#### HW5 Score: 55
-#### HW6 Score: 54
-#### HW7 Score: 50
-#### Project Score: 75
-#### Final Exam Score: 78
+##### HW1 Score: 100
+##### HW2 Score: 89
+##### HW3 Score: 89
+##### HW4 Score: 97
+##### HW5 Score: 55
+##### HW6 Score: 54
+##### HW7 Score: 50
+##### Project Score: 75
+##### Final Exam Score: 78
 
-### Course Average: 76.29
+#### Course Average: 76.29
 
 Note: Homeworks are worth 30% (and are equally weighted), the project is 40%, and the final exam is 30%.
 
